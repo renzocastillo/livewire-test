@@ -48,6 +48,25 @@ class Table extends Component
         'email',
     ];
 
+
+    /**
+     * Sorts the table by a given column.
+     *
+     * @param string $column
+     * @return void
+     */
+    public function sort($column)
+    {
+        if ($column === $this->sortBy) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy = $column;
+            $this->sortDirection = 'asc';
+        }
+        $this->resetPage();
+    }
+
+
     /**
      * Renders the table component.
      *

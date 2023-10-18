@@ -14,11 +14,23 @@
     <div class="table-content">
         <table>
             <thead>
-            <tr>
-                @foreach($indexLabels as $label)
-                    <th>{{ $label }}</th>
+                @foreach($indexLabels as $index => $label)
+                    <th>
+                        <a href="#" wire:click="sort('{{ $indexColumns[$index] }}')">
+                            <span class="{{ $sortBy === $indexColumns[$index] ? 'sorted' : '' }}">
+                                {{ $label }}
+                            </span>
+                            @if ($sortBy === $indexColumns[$index])
+                                <span class="{{ $sortDirection === 'asc' ? 'sorted' : '' }}">&#9650;</span>
+                                <!-- Upward arrow for ascending -->
+                                <span class="{{ $sortDirection === 'desc' ? 'sorted' : '' }}">&#9660;</span>
+                                <!-- Downward arrow for descending -->
+                            @else
+                                <span>&#9650;&#9660;</span> <!-- Both arrows (not sorted) -->
+                            @endif
+                        </a>
+                    </th>
                 @endforeach
-            </tr>
             </thead>
             <tbody wire:loading.class="table-loading">
             @forelse ($results as $row)
@@ -56,5 +68,9 @@
     .table-loading {
         opacity: 0.5;
         color: blue;
+    }
+
+    .sorted {
+        color: green;
     }
 </style>
