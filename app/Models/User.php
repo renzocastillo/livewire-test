@@ -41,4 +41,25 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Scope a query to search for a term in the specified columns.
+     *
+     * @param $query
+     * @param $search
+     * @param $columns
+     *
+     * @return mixed
+     */
+    public function scopeSearch($query, $search='', $columns=[])
+    {
+        if($search){
+            $query->where(function($query) use ($search, $columns){
+                foreach($columns as $column){
+                    $query->orWhere($column, 'LIKE', "%{$search}%");
+                }
+            });
+        }
+        return $query;
+    }
 }
