@@ -32,13 +32,15 @@ class Table extends Component
     public array $indexColumns = [
         'id',
         'name',
-        'email'
+        'email',
+        'birthday'
     ];
 
     public array $indexLabels = [
         'ID',
         'Name',
-        'Email'
+        'Email',
+        'Birthday'
     ];
 
     public string $search = '';
@@ -98,7 +100,7 @@ class Table extends Component
     public function create(){
         // We emit an event to open the form
         $this->emit('formOpened', [
-            'id' => null,
+            'id' => 0,
         ]);
         $this->isFormOpen = true;
     }
