@@ -58,19 +58,27 @@
     </div>
 </div>
 
-<style scoped>
-    .table-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
 
-    .table-loading {
-        opacity: 0.5;
-        color: blue;
-    }
+@push('styles')
+    <style scoped>
+        .table-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .sorted {
-        color: green;
-    }
-</style>
+        .table-loading {
+            opacity: 0.5;
+            color: blue;
+        }
+
+        .sorted {
+            color: green;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+@endpush
+@push('scripts')
+    <script src="https://unpkg.com/moment/moment.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+@endpush

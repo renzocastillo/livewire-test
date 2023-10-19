@@ -26,7 +26,7 @@ class TableForm extends Component
     protected array $rules = [
         'name' => 'required|min:6',
         'email' => 'required|email|unique:users,email',
-        'birthday'=> 'nullable'
+        'birthday'=> 'sometimes'
     ];
 
     /**
@@ -45,7 +45,7 @@ class TableForm extends Component
                 $this->form_id = $user->id;
                 $this->name  = $user->name;
                 $this->email = $user->email;
-                $this->birthday = optional($user->birthday)->format('d/m/y');
+                $this->birthday = optional($user->birthday)->format('m/d/Y');
             }else{
                 $this->form_id = 0;
             }
@@ -73,6 +73,7 @@ class TableForm extends Component
         $user = User::find($id);
         $user->name = $this->name;
         $user->email = $this->email;
+        $user->birthday = $this->birthday;
         $user->save();
 
         $this->emit('formClosed');
@@ -90,6 +91,7 @@ class TableForm extends Component
         $user = new User();
         $user->name = $this->name;
         $user->email = $this->email;
+        $user->birthday = $this->birthday;
         $user->password = Hash::make(Str::random(8));
         $user->save();
 

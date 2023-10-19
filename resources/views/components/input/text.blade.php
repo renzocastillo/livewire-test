@@ -1,6 +1,4 @@
 @props([
-    'label',
-    'for',
     'leadingAddon'=>false,
 ])
 <div class="flex rounded-md shadow-sm">
