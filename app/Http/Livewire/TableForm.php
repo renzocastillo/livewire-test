@@ -18,16 +18,22 @@ class TableForm extends Component
     protected $listeners = [ 'formOpened' => 'render' ];
 
     public $form_id = 0;
-    public string $name = '';
-    public string $email = '';
-    public $birthday = null;
     public string $action = 'store';
+    public User $user;
 
     protected array $rules = [
-        'name' => 'required|min:6',
-        'email' => 'required|email|unique:users,email',
-        'birthday'=> 'sometimes'
+        'user.name' => "required|min:6",
+        'user.email' => "required|email|unique:users,email",
+        'user.birthday'=> "sometimes"
     ];
+
+    /**
+     * @return void
+     */
+    public function mount()
+    {
+        $this->user = new User();
+    }
 
     /**
      * Renders the table form component.
@@ -37,18 +43,10 @@ class TableForm extends Component
      * @return Factory|View|Application
      */
     public function render( array $data =[]): View|Factory|Application {
-        if ( ! empty( $data ) && isset( $data['id'] )) {
+        if ( ! empty( $data ) && !empty( $data['id'] )) {
             $id = $data['id'];
-            if ($id >0) {
-                $this->action = 'edit';
-                $user        = User::find( $id );
-                $this->form_id = $user->id;
-                $this->name  = $user->name;
-                $this->email = $user->email;
-                $this->birthday = optional($user->birthday)->format('m/d/Y');
-            }else{
-                $this->form_id = 0;
-            }
+            $this->action = 'edit';
+            $this->user        = User::find( $id );
         }
         return view( 'livewire.table-form');
     }
@@ -59,22 +57,15 @@ class TableForm extends Component
      * @return void
      */
     public function edit(): void {
-        $id= $this->form_id;
         // Create a copy of the rule array and update the 'email' rule with the 'ignore' parameter
         $editRules = $this->rules;
-        $editRules['email'] = [
+        $editRules['user.email'] = [
             'required',
             'email',
-            Rule::unique('users', 'email')->ignore($id),
+            Rule::unique('users', 'email')->ignore($this->user->id),
         ];
         $this->validate($editRules);
-
-
-        $user = User::find($id);
-        $user->name = $this->name;
-        $user->email = $this->email;
-        $user->birthday = $this->birthday;
-        $user->save();
+        $this->user->save();
 
         $this->emit('formClosed');
     }
@@ -88,10 +79,7 @@ class TableForm extends Component
         // Validate the form data
         $this->validate();
 
-        $user = new User();
-        $user->name = $this->name;
-        $user->email = $this->email;
-        $user->birthday = $this->birthday;
+        $user = $this->user;
         $user->password = Hash::make(Str::random(8));
         $user->save();
 
